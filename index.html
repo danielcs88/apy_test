@@ -3,61 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APY Calculator</title>
+    <title>APR/APY Calculator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Merriweather', serif;
+            background-color: #ffffff;
+            color: #1a202c;
         }
-        /* Custom focus styles for better accessibility */
-        input:focus, select:focus, button:focus {
-            outline: 2px solid transparent;
-            outline-offset: 2px;
-            --tw-ring-color: #2563eb;
-            --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-            --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-            box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+        h1, h2 {
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+        }
+        label {
+            font-family: 'Roboto', sans-serif;
+        }
+        .input-field {
+            border: none;
+            border-bottom: 2px solid #e2e8f0;
+            background-color: transparent;
+            padding-left: 0;
+            padding-right: 0;
+            border-radius: 0;
+            transition: border-color 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-bottom-color: #3b82f6;
+            --tw-ring-shadow: none; /*- Remove tailwind focus ring for this custom style */
+        }
+        .stat-card {
+            padding: 1rem;
+        }
+        .stat-label {
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.875rem;
+            color: #4a5568;
+        }
+        .stat-value {
+            font-family: 'Merriweather', serif;
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: #1a202c;
         }
     </style>
 </head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+<body class="flex items-center justify-center min-h-screen">
 
-    <div class="w-full max-w-lg mx-auto bg-white p-8 rounded-xl shadow-lg">
-        <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">APY Calculator</h1>
+    <div class="w-full max-w-4xl mx-auto p-8 sm:p-12">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">APR/APY Calculator</h1>
 
-        <div class="space-y-4">
+        <!-- Input Section -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-6 mb-8">
             <div class="input-group">
-                <label for="loanAmount" class="block text-sm font-medium text-gray-700 mb-1">Loan Amount ($)</label>
-                <input type="number" id="loanAmount" value="225000" class="w-full px-4 py-2 bg-gray-100 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition">
+                <label for="loanAmount" class="block text-sm font-medium text-gray-600">Loan Amount ($)</label>
+                <input type="text" id="loanAmount" value="225000" class="input-field w-full mt-1 text-lg">
             </div>
-
             <div class="input-group">
-                <label for="paymentFrequency" class="block text-sm font-medium text-gray-700 mb-1">Payment Frequency</label>
-                <select id="paymentFrequency" class="w-full px-4 py-2 bg-gray-100 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition">
+                <label for="paymentAmount" class="block text-sm font-medium text-gray-600">Payment Amount ($)</label>
+                <input type="text" id="paymentAmount" value="8156.25" class="input-field w-full mt-1 text-lg">
+            </div>
+            <div class="input-group">
+                <label for="term" class="block text-sm font-medium text-gray-600">Term</label>
+                <input type="number" id="term" value="32" class="input-field w-full mt-1 text-lg">
+            </div>
+            <div class="input-group">
+                <label for="paymentFrequency" class="block text-sm font-medium text-gray-600">Payment Frequency</label>
+                <select id="paymentFrequency" class="input-field w-full mt-1 text-lg">
                     <option value="Monthly">Monthly</option>
                     <option value="Weekly">Weekly</option>
                 </select>
             </div>
-
-            <div class="input-group">
-                <label for="paymentAmount" class="block text-sm font-medium text-gray-700 mb-1">Payment Amount ($)</label>
-                <input type="number" id="paymentAmount" value="8156.25" class="w-full px-4 py-2 bg-gray-100 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition">
-            </div>
-
-            <div class="input-group">
-                <label for="term" class="block text-sm font-medium text-gray-700 mb-1">Term (in periods)</label>
-                <input type="number" id="term" value="32" class="w-full px-4 py-2 bg-gray-100 border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition">
-            </div>
         </div>
 
-        <button id="calculateBtn" class="w-full mt-8 py-3 px-4 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
-            Calculate APY
-        </button>
+        <!-- Results Section -->
+        <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-4">Results</h2>
+        <hr class="mb-6">
+        <div id="results-summary" class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <!-- Stat cards will be injected here -->
+        </div>
 
-        <div id="output" class="mt-8"></div>
+        <!-- Detailed Breakdown Section -->
+        <h2 class="text-2xl font-bold text-gray-800 mt-12 mb-4">Detailed Breakdown</h2>
+        <hr class="mb-6">
+        <div id="results-detailed" class="overflow-x-auto">
+            <!-- Detailed table will be injected here -->
+        </div>
+        
+        <div id="error-output" class="mt-8"></div>
     </div>
 
     <script>
@@ -79,9 +115,6 @@
          * @param {number} principal - The initial loan amount.
          * @param {number} payment - The payment amount per period.
          * @param {number} periods - The total number of payment periods.
-         * @param {number} [guess=0.01] - The initial guess for the rate.
-         * @param {number} [tol=1e-6] - The convergence tolerance.
-         * @param {number} [maxIter=1000] - The maximum number of iterations.
          * @returns {number} The calculated interest rate per period.
          */
         function computeRate(principal, payment, periods, guess = 0.01, tol = 1e-6, maxIter = 1000) {
@@ -89,20 +122,18 @@
             if (periods <= 0) throw new Error("Number of periods must be positive.");
             if (principal <= 0) throw new Error("Principal must be positive.");
             if (payment <= 0) throw new Error("Payment must be positive.");
+            
+            if (payment * periods < principal) {
+                 throw new Error("Total payments are less than the loan amount.");
+            }
 
             for (let i = 0; i < maxIter; i++) {
-                // Present Value formula
                 const pvOfAnnuity = payment * (1 - Math.pow(1 + rate, -periods));
-                
-                // Handle rate close to zero to avoid division by zero
                 const pv = (Math.abs(rate) < 1e-9) ? payment * periods : pvOfAnnuity / rate;
-
-                // Derivative of the PV formula with respect to the rate
                 const derivativeNumerator = payment * (Math.pow(1 + rate, -periods) * (periods * rate + 1) - 1);
                 
                 let derivative;
                 if (Math.abs(rate) < 1e-9) {
-                    // Taylor expansion for derivative when rate is near zero
                     derivative = -payment * periods * (periods + 1) / 2;
                 } else {
                     derivative = derivativeNumerator / (rate * rate);
@@ -121,104 +152,162 @@
             }
             throw new Error("Failed to converge within maximum iterations.");
         }
+        
+        /**
+         * Formats a number string with commas, preserving decimal part.
+         * @param {string} numStr - The string to format.
+         * @returns {string} The formatted number string.
+         */
+        function formatNumber(numStr) {
+            if (!numStr) return '';
+            let parts = numStr.toString().split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return parts.join('.');
+        }
+        
+        /**
+         * Removes commas from a string.
+         * @param {string} numStr - The string to unformat.
+         * @returns {string} The unformatted number string.
+         */
+        function unformatNumber(numStr) {
+            return numStr.toString().replace(/,/g, '');
+        }
 
         /**
          * Main function to handle UI, calculations, and display.
          */
         function calculateAndDisplay() {
-            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
-            const paymentAmount = parseFloat(document.getElementById('paymentAmount').value);
-            const term = parseInt(document.getElementById('term').value, 10);
-            const frequency = document.getElementById('paymentFrequency').value;
-            const outputDiv = document.getElementById('output');
+            const summaryDiv = document.getElementById('results-summary');
+            const detailedDiv = document.getElementById('results-detailed');
+            const errorDiv = document.getElementById('error-output');
 
-            outputDiv.innerHTML = ''; // Clear previous results
+            summaryDiv.innerHTML = '';
+            detailedDiv.innerHTML = '';
+            errorDiv.innerHTML = '';
 
             try {
-                // Input validation
+                const loanAmount = parseFloat(unformatNumber(document.getElementById('loanAmount').value));
+                const paymentAmount = parseFloat(unformatNumber(document.getElementById('paymentAmount').value));
+                const term = parseInt(document.getElementById('term').value, 10);
+                const frequency = document.getElementById('paymentFrequency').value;
+
                 if (isNaN(loanAmount) || isNaN(paymentAmount) || isNaN(term)) {
                     throw new Error("Please enter valid numbers for all fields.");
                 }
 
                 const periods = term;
                 const totalRepayment = paymentAmount * periods;
-                
-                let rate, apy, apr, monthlyCost;
                 const periodsPerYear = (frequency === "Monthly") ? 12 : 52;
 
-                rate = computeRate(loanAmount, paymentAmount, periods);
-                apy = Math.pow(1 + rate, periodsPerYear) - 1;
-                apr = rate * periodsPerYear;
-                monthlyCost = (totalRepayment > 0 && periods > 0) ? totalRepayment / (periods / (periodsPerYear / 12)) : 0;
-                
+                const rate = computeRate(loanAmount, paymentAmount, periods);
+                const apy = Math.pow(1 + rate, periodsPerYear) - 1;
+                const apr = rate * periodsPerYear;
+                const monthlyCost = (totalRepayment > 0 && periods > 0) ? totalRepayment / (periods / (periodsPerYear / 12)) : 0;
                 const totalInterest = totalRepayment - loanAmount;
                 const premium = (loanAmount > 0) ? (totalRepayment / loanAmount) - 1 : 0;
-
-                const results = {
-                    "Monthly Cost": monthlyCost,
-                    "Total Repayment": totalRepayment,
-                    "Total Interest Paid": totalInterest,
-                    "Premium": premium,
-                    [`${frequency} Interest Rate`]: rate,
-                    "APY (Annual Percentage Yield)": apy,
-                    "APR": apr,
-                };
                 
-                // Helper to format values as currency or percentage
-                const formatValue = (key, value) => {
-                    if (['Premium', 'Interest Rate', 'APY', 'APR'].some(k => key.includes(k))) {
-                        return (value * 100).toFixed(2) + '%';
+                const summaryResults = {
+                    "Monthly Cost": { value: monthlyCost, format: 'currency' },
+                    "Total Repayment": { value: totalRepayment, format: 'currency' },
+                    "APY (Annual Percentage Yield)": { value: apy, format: 'percent' },
+                    "APR": { value: apr, format: 'percent' },
+                };
+
+                const detailedResults = {
+                    "Total Interest Paid": { value: totalInterest, format: 'currency' },
+                    "Premium": { value: premium, format: 'percent' },
+                    [`${frequency} Interest Rate`]: { value: rate, format: 'percent', precision: 4 },
+                };
+
+                const formatValue = (value, type, precision = 2) => {
+                    if (type === 'percent') {
+                        return (value * 100).toFixed(precision) + '%';
                     }
                     return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 };
 
-                // Build the results table HTML
-                let tableHTML = `
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">💡 Results</h3>
-                    <div class="overflow-hidden border border-gray-200 rounded-lg">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <tbody class="bg-white divide-y divide-gray-200">`;
-                
-                for (const [key, value] of Object.entries(results)) {
-                    tableHTML += `
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${key}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono text-right">${formatValue(key, value)}</td>
+                let summaryHTML = '';
+                for (const [label, data] of Object.entries(summaryResults)) {
+                    summaryHTML += `
+                        <div class="stat-card">
+                            <div class="stat-label">${label}</div>
+                            <div class="stat-value">${formatValue(data.value, data.format)}</div>
+                        </div>`;
+                }
+                summaryDiv.innerHTML = summaryHTML;
+
+                let detailedHTML = `
+                    <table class="min-w-full">
+                        <tbody class="bg-white">`;
+                for (const [label, data] of Object.entries(detailedResults)) {
+                    detailedHTML += `
+                        <tr class="border-t border-gray-200">
+                            <td class="px-4 py-3 text-sm font-medium text-gray-800">${label}</td>
+                            <td class="px-4 py-3 text-sm text-gray-600 font-mono text-right">${formatValue(data.value, data.format, data.precision)}</td>
                         </tr>`;
                 }
-                
-                tableHTML += `
-                            </tbody>
-                        </table>
-                    </div>`;
-                
-                outputDiv.innerHTML = tableHTML;
+                detailedHTML += `</tbody></table>`;
+                detailedDiv.innerHTML = detailedHTML;
 
             } catch (e) {
-                // Display errors in a styled message box
-                outputDiv.innerHTML = `
-                    <div class="p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
-                        <p class="font-bold">Error:</p>
+                errorDiv.innerHTML = `
+                    <div class="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg mt-4">
+                        <p class="font-bold">Calculation Error:</p>
                         <p>${e.message}</p>
                     </div>`;
             }
         }
+        
+        /**
+         * Handles live formatting of number inputs with commas.
+         * @param {Event} event - The input event.
+         */
+        function handleCurrencyInput(event) {
+            const input = event.target;
+            let value = input.value;
+            const cursorStart = input.selectionStart;
+            
+            // Unformat value and count commas before cursor
+            const unformattedValue = unformatNumber(value);
+            const commasBeforeCursor = (value.substring(0, cursorStart).match(/,/g) || []).length;
+            
+            // Reformat the number
+            const formattedValue = formatNumber(unformattedValue);
+            
+            input.value = formattedValue;
+            
+            // Recalculate cursor position
+            const newCommasBeforeCursor = (formattedValue.substring(0, cursorStart).match(/,/g) || []).length;
+            const newCursorPos = cursorStart + (newCommasBeforeCursor - commasBeforeCursor);
+
+            // Set the new cursor position
+            input.setSelectionRange(newCursorPos, newCursorPos);
+        }
 
         // --- Event Listeners ---
-        const calculateBtn = document.getElementById('calculateBtn');
-        const inputs = document.querySelectorAll('input, select');
-        
-        // Use debounce to make the calculator feel more responsive on input change
+        const amountInputs = [document.getElementById('loanAmount'), document.getElementById('paymentAmount')];
+        const allInputs = document.querySelectorAll('input, select');
         const debouncedCalculate = debounce(calculateAndDisplay, 400);
 
-        // Attach event listeners
-        calculateBtn.addEventListener('click', calculateAndDisplay);
-        inputs.forEach(input => {
+        allInputs.forEach(input => {
             input.addEventListener('input', debouncedCalculate);
         });
 
-        // Initial calculation on page load
-        document.addEventListener('DOMContentLoaded', calculateAndDisplay);
+        amountInputs.forEach(input => {
+            // Change input type to text to allow commas
+            input.setAttribute('type', 'text');
+            input.setAttribute('inputmode', 'decimal');
+            input.addEventListener('input', handleCurrencyInput);
+        });
+
+        // Initial calculation and formatting on page load
+        document.addEventListener('DOMContentLoaded', () => {
+             amountInputs.forEach(input => {
+                input.value = formatNumber(unformatNumber(input.value));
+            });
+            calculateAndDisplay();
+        });
     </script>
 
 </body>
