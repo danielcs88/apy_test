@@ -31,10 +31,85 @@
         --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
         box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)
       }
+
+      /* Dark Mode Styles */
+      body.dark {
+        background-color: #1a202c; /* Dark background */
+        color: #e2e8f0; /* Light text */
+      }
+
+      body.dark .bg-white {
+        background-color: #2d3748; /* Darker card background */
+      }
+
+      body.dark .text-gray-800 {
+        color: #e2e8f0; /* Light text for headers */
+      }
+
+      body.dark .text-gray-700 {
+        color: #cbd5e0; /* Lighter text for labels */
+      }
+
+      body.dark .bg-gray-100 {
+        background-color: #4a5568; /* Darker input background */
+        border-color: #4a5568; /* Darker input border */
+        color: #e2e8f0; /* Light text for inputs */
+      }
+
+      body.dark .border-gray-300 {
+        border-color: #4a5568; /* Darker input border */
+      }
+
+      body.dark .focus\:border-blue-500 {
+        border-color: #63b3ed; /* Lighter blue focus border */
+      }
+
+      body.dark .focus\:ring-blue-500 {
+        --tw-ring-color: #63b3ed; /* Lighter blue focus ring */
+      }
+
+      body.dark .bg-blue-600 {
+        background-color: #4299e1; /* Lighter blue button */
+      }
+
+      body.dark .hover\:bg-blue-700:hover {
+        background-color: #3182ce; /* Even lighter blue on hover */
+      }
+
+      body.dark .text-gray-600 {
+        color: #a0aec0; /* Lighter grey text */
+      }
+
+      body.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+        border-color: #4a5568; /* Darker divider color */
+      }
+
+      body.dark .border-gray-200 {
+        border-color: #4a5568; /* Darker border color */
+      }
+
+      body.dark .hover\:bg-gray-50:hover {
+        background-color: #4a5568; /* Darker hover background for table rows */
+      }
+
+      /* Style for the dark mode icon */
+      #darkModeToggle img {
+        filter: invert(0%); /* Default to light icon */
+        transition: filter 0.3s ease;
+      }
+
+      body.dark #darkModeToggle img {
+        filter: invert(100%); /* Invert for dark mode icon */
+      }
     </style>
     <body class="bg-gray-50 flex items-center justify-center min-h-screen">
       <div class="w-full bg-white max-w-lg mx-auto p-8 rounded-xl shadow-lg">
         <h1 class="font-bold mb-6 text-2xl text-center text-gray-800">APY Calculator</h1>
+        <div class="flex justify-end mb-4">
+          <button id="darkModeToggle" class="p-2 rounded-md bg-gray-200 dark:bg-gray-700">
+            <img src="assets/dark_moon.svg" alt="Toggle Dark Mode" class="w-6 h-6">
+          </button>
+        </div>
         <div class=space-y-4>
           <div class=input-group><label class="block font-medium mb-1 text-gray-700 text-sm" for=loanAmount>Loan Amount ($)</label><input class="w-full focus:ring-blue-500 px-4 rounded-md transition bg-gray-100 border-gray-300 focus:border-blue-500 py-2" id=loanAmount type="text" value=10,000></div>
           <div class=input-group><label class="block font-medium mb-1 text-gray-700 text-sm" for=paymentFrequency>Payment Frequency</label><select class="w-full focus:ring-blue-500 px-4 rounded-md transition bg-gray-100 border-gray-300 focus:border-blue-500 py-2" id=paymentFrequency>
@@ -145,10 +220,11 @@
             };
             // Build the results table HTML
             let tableHTML = `
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">💡 Results</h3><div class="overflow-hidden border border-gray-200 rounded-lg"><table class="min-w-full divide-y divide-gray-200"><tbody class="bg-white divide-y divide-gray-200">`;
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">💡 Results</h3><div class="overflow-x-auto border border-gray-200 rounded-lg"><table class="min-w-full divide-y divide-gray-200"><tbody class="bg-white divide-y divide-gray-200">`;
             for (const [key, value] of Object.entries(results)) {
+              // Removed whitespace-nowrap from td classes
               tableHTML += `
-                        <tr class="hover:bg-gray-50"><td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">${key}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono text-right">${formatValue(key, value)}</td></tr>`;
+                        <tr class="hover:bg-gray-50"><td class="px-6 py-4 text-sm font-medium text-gray-800">${key}</td><td class="px-6 py-4 text-sm text-gray-600 font-mono text-right">${formatValue(key, value)}</td></tr>`;
             }
             tableHTML += `
                             </tbody></table></div>`;
@@ -170,7 +246,30 @@
           input.addEventListener('input', debouncedCalculate);
         });
         // Initial calculation on page load
-        document.addEventListener('DOMContentLoaded', calculateAndDisplay);
+        document.addEventListener('DOMContentLoaded', () => {
+          calculateAndDisplay(); // Perform initial calculation
+          // Dark mode toggle logic
+          const darkModeToggle = document.getElementById('darkModeToggle');
+          const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+          const currentTheme = localStorage.getItem('theme');
+
+          if (currentTheme === 'dark') {
+            document.body.classList.add('dark');
+          } else if (currentTheme === 'light') {
+            document.body.classList.remove('dark');
+          } else if (prefersDarkScheme.matches) {
+            document.body.classList.add('dark');
+          }
+
+          darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            let theme = 'light';
+            if (document.body.classList.contains('dark')) {
+              theme = 'dark';
+            }
+            localStorage.setItem('theme', theme);
+          });
+        });
 
         function addCommaSeparators(input) {
           input.value = input.value.replace(/,/g, ''); // Remove existing commas
